@@ -14,6 +14,7 @@ def home_page():  # put application's code here
 @login_required
 def market_page():
     purchase_form = PurchaseItemForm()
+    sell_form  = SellItemForm()
     if request.method == 'POST':
         purchased_item = request.form.get('purchased_item')
         p_item_object = Item.query.filter_by(name=purchased_item).first()
@@ -27,7 +28,8 @@ def market_page():
 
     if request.method == 'GET':
         items = Item.query.filter_by(owner=None)
-        return render_template('market.html', items=items, purchase_form=purchase_form)
+        owned_items = Item.query.filter_by(owner=current_user.id)
+        return render_template('market.html', items=items, purchase_form=purchase_form, owned_items=owned_items, sell_form=sell_form)
 
 
 @app.route('/register', methods=['GET', 'POST'])
